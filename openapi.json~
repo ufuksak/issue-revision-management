@@ -1,0 +1,114 @@
+{
+  "info": {
+    "title": "Issue API",
+    "description": "API for managing issues",
+    "version": "1.0.0"
+  },
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "issues",
+      "description": "Issue operations"
+    }
+  ],
+  "swagger": "2.0",
+  "paths": {
+    "/": {
+      "get": {
+        "responses": {},
+        "summary": "Get the discovery",
+        "description": "Get the discovery details",
+        "parameters": []
+      }
+    },
+    "/health": {
+      "get": {
+        "responses": {},
+        "summary": "Get the health",
+        "description": "Get the health details",
+        "parameters": []
+      }
+    },
+    "/issues/{id}": {
+      "get": {
+        "responses": {},
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "summary": "Get the issue",
+        "description": "Get the issue with the given filtering options"
+      }
+    },
+    "/issues": {
+      "post": {
+        "responses": {},
+        "parameters": [],
+        "summary": "Create a new issue",
+        "description": "Create a new issue with the given data"
+      },
+      "get": {
+        "responses": {},
+        "parameters": [],
+        "summary": "List all the issues",
+        "description": "List all the issues with the given filtering and sorting options"
+      },
+      "put": {
+        "responses": {},
+        "parameters": [],
+        "summary": "Updates the issue",
+        "description": "Updates the issue with the given data"
+      }
+    },
+    "/issues/{id}/revisions": {
+      "get": {
+        "responses": {},
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "summary": "List the revisions by the issue",
+        "description": "List the revisions by the issue with the given data"
+      }
+    },
+    "/auth/generateToken": {
+      "post": {
+        "responses": {},
+        "summary": "Generates the token",
+        "description": "Generates the token with the given email data",
+        "parameters": []
+      }
+    },
+    "/auth/validateToken": {
+      "post": {
+        "responses": {},
+        "summary": "Validates the token",
+        "description": "Validates the token",
+        "parameters": []
+      }
+    },
+    "/issues/{id}/revisions/diff": {
+      "get": {
+        "responses": {},
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "summary": "Compares the revisions by the issue",
+        "description": "Compares the revisions by the issue with the given data"
+      }
+    }
+  }
+}
