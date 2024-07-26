@@ -1,0 +1,78 @@
+name: Generate Release Branch
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  build:
+    name: Generate Release Branch
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22.1.0'
+
+      - name: Generate build ID
+        id: prep
+        run: |
+          sha=${GITHUB_SHA::7}
+          ts=$(date +'%d-%m-%Y')
+          echo "::set-output name=BUILD_ID::${sha}-${ts}"
+
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          ref: 'develop'
+
+      - id: set_var
+        run: |
+          content=`cat ./package.json`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=packageJson::$content"
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Install Repository
+        run: |
+          git config --global user.name 'Release Automation'
+          git config --global user.email 'release.automation@casion.com'
+          npm install
+
+      - name: Stash Temporary Files
+        run: |
+          git stash
+
+      - name: Retrieve The Release Version
+        run: |
+          releaseVersion="$(npm run release -- minor --ci --release-version| tail -1)"
+          echo "::set-output name=releaseVersion::$releaseVersion"
+        id: version
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+
+      - name: Extract Release Package
+        run: |
+          npm run release -- minor --ci
+
+      - name: Print the Current Version
+        run: |
+          echo "Previous version: ${{fromJson(steps.set_var.outputs.packageJson).version}}"
+
+      - name: Generate Release Branch
+        run: |
+          git checkout -b 'release-${{steps.version.outputs.releaseVersion}}'
+
+      - name: Push Release Branch
+        run: |
+          git push --set-upstream origin 'release-${{steps.version.outputs.releaseVersion}}'

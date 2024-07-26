@@ -1,0 +1,322 @@
+openapi: 3.0.0
+info:
+  title: Koa Node.js API
+  version: 1.0.0
+  description: A sample API specification for a Koa Node.js application
+
+paths:
+  /issues:
+    get:
+      summary: Get all issues
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: 'limit'
+          description: 'The numbers of items to return'
+          schema:
+            type: integer
+            default: 20
+            minimum: 0
+            maximum: 30
+        - in: query
+          name: 'offset'
+          description: 'The number of items to skip before starting to collect the result set'
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - in: query
+          name: 'sort'
+          description: 'Sorting field'
+          schema:
+            type: string
+            default: title
+        - in: query
+          name: 'order'
+          description: 'Sort order asc/desc'
+          schema:
+            type: string
+            enum: [ ASC, DESC ]
+            default: DESC
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Issue'
+    post:
+      summary: Create a new issue
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueInput'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Issue'
+        '400':
+          description: Bad request
+
+  /issues/{id}:
+    get:
+      summary: Get a issue by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Issue'
+        '404':
+          description: The Data not found
+    put:
+      summary: Update the issue
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueInput'
+      responses:
+        '201':
+          description: Issue updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Issue'
+        '400':
+          description: Bad request
+
+  /issues/{id}/revisions:
+    get:
+      summary: Get the revisions by the given issue
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: 'limit'
+          description: 'The numbers of items to return'
+          schema:
+            type: integer
+            default: 20
+            minimum: 0
+            maximum: 30
+        - in: query
+          name: 'offset'
+          description: 'The number of items to skip before starting to collect the result set'
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - in: query
+          name: 'sort'
+          description: 'Sorting field'
+          schema:
+            type: string
+            default: title
+        - in: query
+          name: 'order'
+          description: 'Sort order asc/desc'
+          schema:
+            type: string
+            enum: [ ASC, DESC ]
+            default: DESC
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Revision'
+        '404':
+          description: The Data not found
+
+  /issues/{id}/revisions/diff:
+    get:
+      summary: Get the revision differences by the given issue
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RevisionDifference'
+        '404':
+          description: The Data not found
+
+components:
+  schemas:
+    Issue:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        created_by:
+          type: string
+        updated_by:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+      required:
+        - id
+        - title
+        - description
+
+    IssueInput:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        revision:
+          type: string
+        state:
+          type: string
+        revisionTitle:
+          type: string
+      required:
+        - title
+        - description
+
+    Revision:
+      type: object
+      properties:
+        id:
+          type: integer
+        state:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        issueId:
+          type: number
+        created_by:
+          type: string
+        updated_by:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+      required:
+        - id
+        - state
+        - title
+        - description
+
+    RevisionDifference:
+      type: object
+      properties:
+        before:
+          type: object
+          properties:
+            title:
+              type: string
+              nullable: true
+            description:
+              type: string
+              nullable: true
+            state:
+              type: string
+              nullable: true
+        after:
+          type: object
+          properties:
+            title:
+              type: string
+              nullable: true
+            description:
+              type: string
+              nullable: true
+            state:
+              type: string
+              nullable: true
+        changes:
+          type: object
+          properties:
+            title:
+              type: object
+              nullable: true
+              properties:
+                from:
+                  type: string
+                to:
+                  type: string
+            description:
+              type: object
+              nullable: true
+              properties:
+                from:
+                  type: string
+                to:
+                  type: string
+            state:
+              type: object
+              nullable: true
+              properties:
+                from:
+                  type: string
+                to:
+                  type: string
+        revisions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Revision'
+      required:
+        - before
+        - after
+        - changes
+        - revisions
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT  # optional, for documentation purposes only
+
+externalDocs:
+  description: 'Find out more about Swagger'
+  url: 'http://swagger.io'
