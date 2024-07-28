@@ -1,13 +1,10 @@
-"use strict";
+import { Model, DataTypes, Sequelize } from "sequelize";
 
-// @ts-expect-error TS(2451): Cannot redeclare block-scoped variable 'Model'.
-const { Model, DataTypes } = require("sequelize");
+export default (sequelize: Sequelize) => {
+    class Revision extends Model {}
 
-// @ts-expect-error TS(2580): Cannot find name 'module'. Do you need to install ... Remove this comment to see the full error message
-module.exports = (sequelize: any) => {
-    class Revision extends Model {
-    }
-    (Revision as any).init({
+    Revision.init(
+        {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -29,7 +26,8 @@ module.exports = (sequelize: any) => {
             type: DataTypes.STRING,
             defaultValue: "unknown",
         },
-    }, {
+     },
+     {
         timestamps: true,
         updatedAt: "updated_at",
         createdAt: "created_at",

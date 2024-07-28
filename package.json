@@ -4,12 +4,14 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test JWT_SECRET_KEY=gfg_jwt_secret_key EXPIRY_TIME=3600 jest --runInBand --detectOpenHandles --coverage",
-    "start": "NODE_ENV=development JWT_SECRET_KEY=gfg_jwt_secret_key EXPIRY_TIME=3600 node index.js",
-    "watch-node": "NODE_ENV=development JWT_SECRET_KEY=gfg_jwt_secret_key EXPIRY_TIME=3600 nodemon --watch lib index.js",
+    "start": "NODE_ENV=development JWT_SECRET_KEY=gfg_jwt_secret_key EXPIRY_TIME=3600 ts-node lib/index.ts",
+    "watch-node": "NODE_ENV=development JWT_SECRET_KEY=gfg_jwt_secret_key EXPIRY_TIME=3600 nodemon --watch lib lib/index.ts",
+    "generate-types": "npx openapi-typescript ./lib/openapi.yaml --output ./lib/types/schema.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@types/js-yaml": "^4.0.9",
     "dotenv": "^16.4.5",
     "http-status": "^1.7.4",
     "js-yaml": "^4.1.0",
@@ -20,18 +22,29 @@
     "koa2-swagger-ui": "^5.10.0",
     "mysql2": "^3.9.7",
     "nodemon": "^3.1.4",
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.3",
+    "sequelize-typescript": "^2.1.6"
   },
   "author": "Testlio",
   "license": "ISC",
   "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/koa": "^2.15.0",
+    "@types/koa-bodyparser": "^4.3.12",
+    "@types/koa-router": "^7.4.8",
+    "@types/node": "^20.14.12",
+    "@types/supertest": "^6.0.2",
+    "cross-env": "^7.0.3",
     "globals": "^15.8.0",
     "jest": "^29.7.0",
     "jest-cli": "^29.7.0",
     "sequelize-cli": "^6.6.2",
     "sqlite3": "^5.1.7",
     "supertest": "^7.0.0",
+    "ts-jest": "^29.2.3",
     "ts-migrate": "^0.1.35",
+    "ts-node": "^10.9.2",
     "typescript": "^4.7.4"
   }
 }

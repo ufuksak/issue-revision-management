@@ -1,33 +1,38 @@
-'use strict';
+import { Context } from 'koa';
+import httpStatus from 'http-status';
 
-// @ts-expect-error TS(2451): Cannot redeclare block-scoped variable 'httpStatus... Remove this comment to see the full error message
-const httpStatus = require("http-status");
+interface ResponseData {
+    message: string;
+    errors: any;
+}
 
-// @ts-expect-error TS(2580): Cannot find name 'module'. Do you need to install ... Remove this comment to see the full error message
-module.exports = {
-    success: (context: any, data: any) => {
+export default {
+    success: (context: Context, data: any) => {
         context.body = data;
         context.status = data ? 200 : 204;
     },
-    notAuthorized: (context: any, errors: any) => {
-        context.body = {
+    notAuthorized: (context: Context, errors: any) => {
+        const responseData: ResponseData = {
             message: 'Check your access parameters',
             errors: errors
         };
+        context.body = responseData;
         context.status = httpStatus.UNAUTHORIZED;
     },
-    badRequest: (context: any, errors: any) => {
-        context.body = {
+    badRequest: (context: Context, errors: any) => {
+        const responseData: ResponseData = {
             message: 'Check your request parameters',
             errors: errors
         };
+        context.body = responseData;
         context.status = httpStatus.BAD_REQUEST;
     },
-    notFound: (context: any, errors: any) => {
-        context.body = {
+    notFound: (context: Context, errors: any) => {
+        const responseData: ResponseData = {
             message: 'Resource was not found',
             errors: errors
         };
+        context.body = responseData;
         context.status = httpStatus.NOT_FOUND;
     }
 };

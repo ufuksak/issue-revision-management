@@ -8,6 +8,7 @@ paths:
   /issues:
     get:
       summary: Get all issues
+      operationId: 'getAllIssues'
       security:
         - bearerAuth: []
       parameters:
@@ -50,6 +51,7 @@ paths:
                   $ref: '#/components/schemas/Issue'
     post:
       summary: Create a new issue
+      operationId: 'createNewIssue'
       security:
         - bearerAuth: []
       requestBody:
@@ -71,6 +73,7 @@ paths:
   /issues/{id}:
     get:
       summary: Get a issue by ID
+      operationId: 'getIssueById'
       security:
         - bearerAuth: []
       parameters:
@@ -90,6 +93,7 @@ paths:
           description: The Data not found
     put:
       summary: Update the issue
+      operationId: 'updateIssueById'
       security:
         - bearerAuth: []
       requestBody:
@@ -111,6 +115,7 @@ paths:
   /issues/{id}/revisions:
     get:
       summary: Get the revisions by the given issue
+      operationId: 'getRevisionsByIssueId'
       security:
         - bearerAuth: []
       parameters:
@@ -162,6 +167,7 @@ paths:
   /issues/{id}/revisions/diff:
     get:
       summary: Get the revision differences by the given issue
+      operationId: 'getRevisionsDifferencesByIssueId'
       security:
         - bearerAuth: []
       parameters:

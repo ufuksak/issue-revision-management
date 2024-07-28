@@ -1,37 +1,33 @@
-// @ts-expect-error TS(2580): Cannot find name 'require'. Do you need to install... Remove this comment to see the full error message
-const { Sequelize } = require("sequelize");
-// @ts-expect-error TS(2580): Cannot find name 'require'. Do you need to install... Remove this comment to see the full error message
-const config = require("../../config/database");
-// @ts-expect-error TS(2580): Cannot find name 'require'. Do you need to install... Remove this comment to see the full error message
-const IssueModel = require("./issue");
-// @ts-expect-error TS(2580): Cannot find name 'require'. Do you need to install... Remove this comment to see the full error message
-const RevisionModel = require("./revision");
+import {Options, Sequelize} from "sequelize";
+import dotenv from "dotenv";
+import config from "../../config/database";
+import IssueModel from "./issue";
+import RevisionModel from "./revision";
 
-// @ts-expect-error TS(2580): Cannot find name 'process'. Do you need to install... Remove this comment to see the full error message
-const env = process.env.NODE_ENV || "development";
-const dbConfig = config[env];
+dotenv.config();
 
-// @ts-expect-error TS(2451): Cannot redeclare block-scoped variable 'sequelize'... Remove this comment to see the full error message
-let sequelize;
+let env: string = process.env.NODE_ENV || "development";
+const dbConfig = config[env] as Options;
+
+let sequelize: Sequelize;
 if (env === "test") {
   sequelize = new Sequelize(dbConfig);
 } else {
   sequelize = new Sequelize(
-    dbConfig.database,
-    dbConfig.username,
-    dbConfig.password,
-    dbConfig
+      dbConfig.database!,
+      dbConfig.username!,
+      dbConfig.password!,
+      dbConfig
   );
 }
 
-// @ts-expect-error TS(2451): Cannot redeclare block-scoped variable 'Issue'.
 const Issue = IssueModel(sequelize);
-// @ts-expect-error TS(2451): Cannot redeclare block-scoped variable 'Revision'.
 const Revision = RevisionModel(sequelize);
 
-// @ts-expect-error TS(2580): Cannot find name 'module'. Do you need to install ... Remove this comment to see the full error message
-module.exports = {
+export {
   sequelize,
   Issue,
   Revision,
 };
+
+
